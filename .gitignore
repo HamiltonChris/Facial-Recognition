@@ -9,3 +9,6 @@
 
 # Data files
 *.npz
+
+#image folders
+orl_faces
