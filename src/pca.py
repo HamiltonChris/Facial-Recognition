@@ -37,13 +37,17 @@ def create_subspace(M, k):
     principle_eigenvectors = eigenvectors[:,0:k]
 
     return principle_eigenvalues, principle_eigenvectors, mean
-     
-
-        
-
+    
 # project_upon: projects vector y onto subspace W
 
-# save_subspace: saves a subspace to a text file
-
+# save_subspace: saves a subspace W it's eigenvalues and the mean vector to a text file
+def save_subspace(filename, eigenvalues, eigenvectors, mean):
+   np.savez(filename, eigenvalues = eigenvalues, eigenvectors = eigenvectors, mean = mean)
 
 # load_subspace: returns subspace W from input file in string
+def load_subspace(filename):
+    data = np.load(filename)
+    eigenvalues = data['eigenvalues']
+    eigenvectors = data['eigenvectors']
+    mean = data['mean']
+    return eigenvalues, eigenvectors, mean
