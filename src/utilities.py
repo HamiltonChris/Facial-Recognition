@@ -22,7 +22,18 @@ def unflatten_image(vector, rows, columns):
     image = np.array(img)
     return image
 
+# displays input file image
+def display_image(image):
+    cv2.imshow('image',img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+# saves image in given filename 
+def save_image(filename, image):
+    cv2.imwrite(filename, image)
+
 # load_images: loads images from data set and formats them to input rows and columns
+#               outputs the formated images as a matrix of flat image vectors
 def load_images(dataset, rows=0, columns=0):
     data_path = path + dataset 
     X = [] 
