@@ -22,10 +22,8 @@ def unflatten_image(vector, rows, columns):
     image = np.array(img)
     return image
 
-# load_images: loads images from data set
-# TODO: may need to add inputs to set width and height of images so that
-#       they are uniform
-def load_images(dataset):
+# load_images: loads images from data set and formats them to input rows and columns
+def load_images(dataset, rows=0, columns=0):
     data_path = path + dataset 
     X = [] 
     for root, dirs, files in os.walk(data_path, topdown=False):
@@ -33,7 +31,13 @@ def load_images(dataset):
             img = cv2.imread(os.path.join(root, name),0)
             if img is None:
                 continue
+            height, width = img.shape
+            if  not rows is 0 and rows < height:
+                top = np.floor((height - rows) / 2)
+                img = img[top:(rows + top),:]
+            if not columns is 0 and columns < width:
+                left = np.floor((width - columns) / 2)
+                img = img[:,left:(columns + left)]
             X.append(flatten_image(img).T) 
-    
     M = np.array(X).T
     return M
