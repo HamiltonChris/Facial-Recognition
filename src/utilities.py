@@ -53,9 +53,26 @@ def create_image(rows=0,columns=0):
     while(True):
         ret, img = camera.read()
         image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        cv2.imshow('frame',image)
+        frame = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+        height, width = image.shape
+        if rows is 0:
+            rows = height
+        if columns is 0:
+            columns = width
+        column_offset = np.uint16(np.floor((width - columns) / 2))
+        row_offset = np.uint16(np.floor((height - rows) / 2))
+        # prints frame so that face will fit in image
+        cv2.rectangle(frame,
+                    (column_offset, row_offset), 
+                    (column_offset + columns,row_offset + rows), 
+                    (0,255,0), 
+                    5)
+        cv2.imshow('frame',frame)
         if cv2.waitKey(1) & 0xFF == ord(' '):
             break
+
+    ret, img = camera.read()
+    image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     camera.release()
     cv2.destroyAllWindows()
     image = format_image(image, rows, columns)
@@ -80,9 +97,9 @@ def load_images(dataset, rows=0, columns=0):
 def format_image(img, rows, columns):
     height, width = img.shape
     if  not rows is 0 and rows < height:
-        top = np.floor((height - rows) / 2)
-        img = img[top:(rows + top),:]
+        offset = np.floor((height - rows) / 2)
+        img = img[offset:(rows + offset),:]
     if not columns is 0 and columns < width:
-        left = np.floor((width - columns) / 2)
-        img = img[:,left:(columns + left)]
+        offset = np.floor((width - columns) / 2)
+        img = img[:,offset:(columns + offset)]
     return img
