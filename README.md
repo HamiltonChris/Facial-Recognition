@@ -7,8 +7,10 @@ This is some facial recognition software implemented in python that uses princip
 * ```load_subspace(filename)``` loads from a saved file the eigenvalues, eigenvectors and mean of a space.
 
 ## Utilities
-* ```load_images(dataset, rows=0, columns=0)``` loads all images in a directory and if specified crops them to an input number of rows and columns. Then it flattens each image into a one dimensional vector and appends it to the output matrix M.
+* ```load_image(filename, rows=0, columns=0)``` load a single image from a given filepath in the ```data/``` directory and formats it to input rows and columns (if left default no formating) and outputs it as a flat vector.
+* ```load_images(dataset, rows=0, columns=0)``` loads all images from a directory and all subdirectories in the ```data/``` directory and if specified crops them to an input number of rows and columns. Then it flattens each image into a one dimensional vector and appends it to the output matrix M.
 * ```flatten_image(image)``` turns a two dimensional matrix into a one dimensional vector.
 * ```unflatten_image(vector, rows, columns)``` turns a one dimesional vector back into an image of input dimensions.
 * ```save_image(filename, image)``` saves image at given filename.
 * ```display_image(image)``` prints image to the screen until a key is pressed.
+* ```create_image(rows=0,columns=0)``` uses the default computer camera to take a picture using the spacebar. Image is then formatted and output as a flat vector.

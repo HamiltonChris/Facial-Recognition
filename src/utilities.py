@@ -67,10 +67,10 @@ def create_image(rows=0,columns=0):
                     (column_offset + columns,row_offset + rows), 
                     (0,255,0), 
                     5)
-        cv2.imshow('frame',frame)
+        cv2.imshow('Press the space bar to take a picture.',frame)
         if cv2.waitKey(1) & 0xFF == ord(' '):
             break
-
+    # consider allowing retakes
     ret, img = camera.read()
     image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     camera.release()
