@@ -41,16 +41,26 @@ def load_image(filename, rows=0, columns=0):
     if img is None:
         print image_path + " doesn't contain an image."
         return 
-    # consider refactoring the below into a function
-    height, width = img.shape
-    if  not rows is 0 and rows < height:
-        top = np.floor((height - rows) / 2)
-        img = img[top:(rows + top),:]
-    if not columns is 0 and columns < width:
-        left = np.floor((width - columns) / 2)
-        img = img[:,left:(columns + left)]
+    img = format_image(img, rows, columns)
     return flatten_image(img).T
 
+# turns on webcam and displays the feed to the user, when ready the user presses
+# the space bar to take a picture which is then displayed to the user and after a
+# keypress is formatted and turn into a flat vector.
+def create_image(rows=0,columns=0):
+    # uses default camera on computer, often the builtin webcam
+    camera = cv2.VideoCapture(0)
+    while(True):
+        ret, img = camera.read()
+        image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        cv2.imshow('frame',image)
+        if cv2.waitKey(1) & 0xFF == ord(' '):
+            break
+    camera.release()
+    cv2.destroyAllWindows()
+    image = format_image(image, rows, columns)
+    display_image(image)
+    return flatten_image(image).T 
 
 # load_images: loads images as greyscale from data set and formats them to input 
 # rows and columns outputs the formated images as a matrix of flat image vectors
@@ -62,13 +72,17 @@ def load_images(dataset, rows=0, columns=0):
             img = cv2.imread(os.path.join(root, name),cv2.IMREAD_GRAYSCALE)
             if img is None:
                 continue
-            height, width = img.shape
-            if  not rows is 0 and rows < height:
-                top = np.floor((height - rows) / 2)
-                img = img[top:(rows + top),:]
-            if not columns is 0 and columns < width:
-                left = np.floor((width - columns) / 2)
-                img = img[:,left:(columns + left)]
+            img = format_image(img, rows, columns)
             X.append(flatten_image(img).T) 
     M = np.array(X).T
     return M
+
+def format_image(img, rows, columns):
+    height, width = img.shape
+    if  not rows is 0 and rows < height:
+        top = np.floor((height - rows) / 2)
+        img = img[top:(rows + top),:]
+    if not columns is 0 and columns < width:
+        left = np.floor((width - columns) / 2)
+        img = img[:,left:(columns + left)]
+    return img
