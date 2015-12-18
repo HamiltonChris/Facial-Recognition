@@ -6,9 +6,9 @@ This is some facial recognition software implemented in python that uses princip
 * ```save_subspace(filename, eigenvalues, eigenvectors, mean)``` saves the computed eigenvalues, eigenvectors and mean into a file.
 * ```load_subspace(filename)``` loads from a saved file the eigenvalues, eigenvectors and mean of a space.
 * ```project_image(y, W, mu)``` projects vector (y) onto a subspace (W) using the mean (mu) as given by the equation:
-$$ x = (W^T(y - mu))^T $$
+ x = (W^T(y - mu))^T
 * ```reverse_projection(x, W, mu)``` projects vector (x) back into the original image space from the subspace (W) using mean (mu) as given in the equation:
-$$ y = Wx^T + mu $$
+ y = Wx^T + mu 
 
 ## Utilities
 * ```load_image(filename, rows=0, columns=0)``` load a single image from a given filepath in the ```data/``` directory and formats it to input rows and columns (if left default no formating) and outputs it as a flat vector.
