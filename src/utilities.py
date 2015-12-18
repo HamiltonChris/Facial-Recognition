@@ -10,16 +10,13 @@ path = '../data/'
 # flatten_image: turns a image into a 1xN vector
 def flatten_image(img):
     # flatten in row major order
-    return img.flatten(order = 'C')
+    rows, columns = img.shape
+    return img.reshape((rows*columns,1),order = 'C')
 
 # unflatten_image: turns a 1xN vector into an image
 def unflatten_image(vector, rows, columns):
-    # must traverse in row-major order 
-    img = []
-    for i in range(rows):
-        row = vector[i*columns:(i + 1)*columns]
-        img.append(row)
-    image = np.array(img)
+    # reshapes in row-major order 
+    image = vector.reshape((rows,columns), order = 'C')
     return image
 
 # displays input file image
@@ -32,17 +29,6 @@ def display_image(image):
 def save_image(filename, image):
     image_path = path + filename
     cv2.imwrite(image_path, image)
-
-# loads a saved image called filename and formats it to specified rows and columns
-# (same size if not specified) and outputs as a flatvector
-def load_image(filename, rows=0, columns=0):
-    image_path = path + filename
-    img = cv2.imread(image_path,cv2.IMREAD_GRAYSCALE)
-    if img is None:
-        print image_path + " doesn't contain an image."
-        return 
-    img = format_image(img, rows, columns)
-    return flatten_image(img).T
 
 # turns on webcam and displays the feed to the user, when ready the user presses
 # the space bar to take a picture which is then displayed to the user and after a
@@ -79,19 +65,37 @@ def create_image(rows=0,columns=0):
     display_image(image)
     return flatten_image(image).T 
 
+    
+# loads a saved image called filename and formats it to specified rows and columns
+# (same size if not specified) and outputs as a flatvector
+def load_image(filename, rows=0, columns=0):
+    image_path = path + filename
+    img = cv2.imread(image_path,cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        print image_path + " doesn't contain an image."
+        return 
+    img = format_image(img, rows, columns)
+    return flatten_image(img)
+
+
 # load_images: loads images as greyscale from data set and formats them to input 
 # rows and columns outputs the formated images as a matrix of flat image vectors
 def load_images(dataset, rows=0, columns=0):
     data_path = path + dataset 
-    X = [] 
+    M = np.array([])
+    init = False
     for root, dirs, files in os.walk(data_path, topdown=False):
         for name in files:
             img = cv2.imread(os.path.join(root, name),cv2.IMREAD_GRAYSCALE)
             if img is None:
                 continue
             img = format_image(img, rows, columns)
-            X.append(flatten_image(img).T) 
-    M = np.array(X).T
+            vector = flatten_image(img)
+            if init is False:
+                M = vector
+                init = True
+            else:
+                M = np.hstack((M, vector))
     return M
 
 def format_image(img, rows, columns):

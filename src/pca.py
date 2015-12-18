@@ -24,8 +24,8 @@ def create_subspace(M, k):
     # wow python no scoping in loops, it's kinda hard to take you serious as a language sometimes
 
     # to make the eigenvectors unit length or orthonormal
-    for i in range(images):
-        eigenvectors[:,i] = eigenvectors[:,i] / la.norm(eigenvectors[:,i])
+    #for i in range(images):
+    #    eigenvectors[:,i] = eigenvectors[:,i] / la.norm(eigenvectors[:,i])
 
     sorted_order = np.argsort(eigenvalues)
     sorted_order = np.flipud(sorted_order)
@@ -51,3 +51,13 @@ def load_subspace(filename):
     eigenvectors = data['eigenvectors']
     mean = data['mean']
     return eigenvalues, eigenvectors, mean
+
+# project_image: projects an input image (y) onto a input subspace (W) with mean (mu)
+# returns a projection onto W 
+def project_image(y , W, mu):
+   return np.dot(W.T,(y - mu)).T
+
+# reverse_projection: projects the vector x back into the image space from subspace (W) with mean (mu)
+# returns a flattened image vector
+def reverse_projection(x, W, mu):
+    return (np.dot(W,x.T) + mu)
