@@ -42,7 +42,7 @@ def create_subspace(M, k):
 
 # save_subspace: saves a subspace W it's eigenvalues and the mean vector to a text file
 def save_subspace(filename, eigenvalues, eigenvectors, mean):
-   np.savez(filename, eigenvalues = eigenvalues, eigenvectors = eigenvectors, mean = mean)
+    np.savez(filename, eigenvalues = eigenvalues, eigenvectors = eigenvectors, mean = mean)
 
 # load_subspace: returns subspace W from input file in string
 def load_subspace(filename):
