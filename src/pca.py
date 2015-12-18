@@ -24,8 +24,8 @@ def create_subspace(M, k):
     # wow python no scoping in loops, it's kinda hard to take you serious as a language sometimes
 
     # to make the eigenvectors unit length or orthonormal
-    #for i in range(images):
-    #    eigenvectors[:,i] = eigenvectors[:,i] / la.norm(eigenvectors[:,i])
+    for i in range(images):
+        eigenvectors[:,i] = eigenvectors[:,i] / la.norm(eigenvectors[:,i])
 
     sorted_order = np.argsort(eigenvalues)
     sorted_order = np.flipud(sorted_order)

@@ -1,7 +1,7 @@
 import utilities as utils
 import pca
 
-components = 40
+components = 200
 rows = 112
 columns = 92
 
@@ -14,8 +14,8 @@ x = pca.project_image(img,W,mu)
 print x.shape
 y = pca.reverse_projection(x,W,mu)
 print y.shape 
-image = utils.unflatten_image(y,rows,columns)
-print image.shape
-for i in range(40):
-    utils.display_image(utils.unflatten_image(W[:,i],rows,columns))
+image = utils.normalize_image(utils.unflatten_image(y,rows,columns))
+for i in range(1):
+    utils.display_image(utils.normalize_image(utils.unflatten_image(W[:,i],rows,columns)))
 utils.display_image(image)
+utils.display_image(utils.unflatten_image(img,rows,columns))

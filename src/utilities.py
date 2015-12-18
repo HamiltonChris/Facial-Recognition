@@ -45,8 +45,8 @@ def create_image(rows=0,columns=0):
             rows = height
         if columns is 0:
             columns = width
-        column_offset = np.uint16(np.floor((width - columns) / 2))
-        row_offset = np.uint16(np.floor((height - rows) / 2))
+        column_offset = np.uint32(np.floor((width - columns) / 2))
+        row_offset = np.uint32(np.floor((height - rows) / 2))
         # prints frame so that face will fit in image
         cv2.rectangle(frame,
                     (column_offset, row_offset), 
@@ -107,3 +107,8 @@ def format_image(img, rows, columns):
         offset = np.floor((width - columns) / 2)
         img = img[:,offset:(columns + offset)]
     return img
+
+def normalize_image(vector):
+    minimum = np.amin(vector)
+    maximum = np.amax(vector)
+    return np.uint8(((vector - minimum) / (maximum - minimum)) * 255)
