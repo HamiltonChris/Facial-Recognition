@@ -1,3 +1,6 @@
+# test.py
+# used to quickly test functionality of code
+# requires orl_faces images to be saved in data folder
 import utilities as utils
 import pca
 

@@ -1,5 +1,7 @@
 # Facial Recognition using Eigenfaces
 This is some facial recognition software implemented in python that uses principle component analysis to create eigenfaces which can be used to represent images of faces.
+# Dependencies
+This code runs on python 2.7 and requires the libraries numpy and opencv2
 # Interface
 ## PCA
 * ```create_subspace(M, k)``` takes a Matrix (M) of vectorized images and finds an input number (k) of eigenvectors with the highest eigenvalues as well as the mean image.
