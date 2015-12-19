@@ -33,7 +33,7 @@ def save_image(filename, image):
 # turns on webcam and displays the feed to the user, when ready the user presses
 # the space bar to take a picture which is then displayed to the user and after a
 # keypress is formatted and turn into a flat vector.
-def create_image(rows=0,columns=0):
+def create_image(rows=0,columns=0,scaling=0):
     # uses default camera on computer, often the builtin webcam
     camera = cv2.VideoCapture(0)
     while(True):
@@ -45,25 +45,34 @@ def create_image(rows=0,columns=0):
             rows = height
         if columns is 0:
             columns = width
-        column_offset = np.uint32(np.floor((width - columns) / 2))
-        row_offset = np.uint32(np.floor((height - rows) / 2))
+        if scaling is 0:
+            scaling = 1
+        column_offset = np.uint32(np.floor((width - columns * scaling) / 2))
+        if column_offset < 0:
+            columns_offset = 0
+        row_offset = np.uint32(np.floor((height - rows * scaling) / 2))
+        if row_offset < 0:
+            row_offset = 0
         # prints frame so that face will fit in image
         cv2.rectangle(frame,
                     (column_offset, row_offset), 
-                    (column_offset + columns,row_offset + rows), 
+                    (column_offset + scaling * columns,row_offset + scaling * rows), 
                     (0,255,0), 
                     5)
         cv2.imshow('Press the space bar to take a picture.',frame)
         if cv2.waitKey(1) & 0xFF == ord(' '):
             break
     # consider allowing retakes
-    ret, img = camera.read()
+    ret, img = camera.read() 
     image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     camera.release()
     cv2.destroyAllWindows()
-    image = format_image(image, rows, columns)
+    image = format_image(image, scaling * rows, scaling * columns)
+    print image.shape
+    image = scale_image(image, rows, columns)
+    print image.shape
     display_image(image)
-    return flatten_image(image).T 
+    return flatten_image(image) 
 
     
 # loads a saved image called filename and formats it to specified rows and columns
@@ -107,6 +116,15 @@ def format_image(img, rows, columns):
         offset = np.floor((width - columns) / 2)
         img = img[:,offset:(columns + offset)]
     return img
+
+def scale_image(image, rows=0, columns=0):
+    height, width = image.shape
+    if rows is 0 or rows > height:
+        rows = height
+    if columns is 0 or columns > width:
+        columns = width
+    # dimensions are backwards here for whatever reason
+    return cv2.resize(image, (columns,rows))
 
 def normalize_image(vector):
     minimum = np.amin(vector)
