@@ -51,3 +51,13 @@ def load_subspace(filename):
     eigenvectors = data['eigenvectors']
     mean = data['mean']
     return eigenvalues, eigenvectors, mean
+
+# project_image: projects an input image (y) onto a input subspace (W) with mean (mu)
+# returns a projection onto W 
+def project_image(y , W, mu):
+   return np.dot(W.T,(y - mu)).T
+
+# reverse_projection: projects the vector x back into the image space from subspace (W) with mean (mu)
+# returns a flattened image vector
+def reverse_projection(x, W, mu):
+    return (np.dot(W,x.T) + mu)
