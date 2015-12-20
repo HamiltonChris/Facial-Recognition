@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 
 path = '../data/'
+projections = path + 'projections.npz'
 
 # flatten_image: turns a image into a 1xN vector
 def flatten_image(img):
@@ -29,6 +30,23 @@ def display_image(image):
 def save_image(filename, image):
     image_path = path + filename
     cv2.imwrite(image_path, image)
+
+# saves a given projection paired with a name
+def save_projection(name, x):
+    if not os.path.exists(projections):
+        np.savez(projections, names=[name], projections=[x])
+        print "created new projection file\n"
+    else:
+        data = np.load(projections)
+        name_data = data['names']
+        proj_data = data['projections']
+        data.close() 
+
+        name_data = np.vstack((name_data, name))
+        proj_data = np.vstack((proj_data, x))
+        np.savez(projections, names=name_data, projections=proj_data)
+        
+    
 
 # turns on webcam and displays the feed to the user, when ready the user presses
 # the space bar to take a picture which is then displayed to the user and after a
