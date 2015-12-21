@@ -3,6 +3,8 @@
 import numpy as np
 from numpy import linalg as la
 
+import utilities as utils
+
 # create_subspace: finds the k principle components of a matrix M 
 # returns eigenvalues, eigenvectors, mean
 def create_subspace(M, k):
@@ -59,3 +61,18 @@ def project_image(y , W, mu):
 # returns a flattened image vector
 def reverse_projection(x, W, mu):
     return (np.dot(W,x.T) + mu)
+
+# checks the distance between the input projection and all projections in the given file
+def find_closest(projection, filename):
+    names, projections = utils.load_projections(filename)
+    closest_distance = -1
+    closest_index = 0
+    count = 0
+    for proj in projections: 
+        distance = la.norm(projection - proj[0])
+        if closest_distance > distance or closest_distance is -1:
+            closest_distance = distance
+            closest_index = count
+        count += 1
+    return names[closest_index], projections[closest_index]
+

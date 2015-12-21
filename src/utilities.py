@@ -37,7 +37,7 @@ def save_projection(name, x, filename):
     projections = path + filename
     if not os.path.exists(projections):
         np.savez(projections, names=[name], projections=[x])
-        print "created new projection file\n"
+        print "created new projection file"
     else:
         data = np.load(projections)
         if data is None:
@@ -47,9 +47,9 @@ def save_projection(name, x, filename):
         name_data = data['names']
         proj_data = data['projections']
         data.close() 
-
+        print x.shape, proj_data.shape
         name_data = np.vstack((name_data, name))
-        proj_data = np.vstack((proj_data, x))
+        proj_data = np.vstack((proj_data, [x]))
         np.savez(projections, names=name_data, projections=proj_data)
         
 # returns the first instance of name in the projection file
@@ -68,6 +68,18 @@ def load_projection(name, filename):
             return np.array(projection, ndmin=2).T
     data.close()
     return None
+
+def load_projections(filename): 
+    projections = path + filename
+    if not os.path.exists(projections):
+        return None, None
+    data = np.load(projections)
+    names = data['names']
+    projections = data['projections']
+    data.close()
+
+    return names, projections
+    
 
 # turns on webcam and displays the feed to the user, when ready the user presses
 # the space bar to take a picture which is then displayed to the user and after a
