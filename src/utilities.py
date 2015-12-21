@@ -169,3 +169,16 @@ def normalize_image(vector):
     minimum = np.amin(vector)
     maximum = np.amax(vector)
     return np.uint8(((vector - minimum) / (maximum - minimum)) * 255)
+
+#all Image matrix is the binary matrix of all images stitched together, all images should be 1xN, all images would be a 2d array of 1xN images
+#function returns a list of coeffs, which can be used to determine which image has the largest correlation to the image
+#to find which one it closest matches to, find the largest coefficient in the matrix (index 0 would be first image in allImageMatrix)
+#this can also be used to generate a new image that closest resembles the target pictureMatrix using the images from allImageMatrix
+
+#the function uses a QR decomposition to get the QR of an orthogonal matrix Q and an upper triangular matrix R
+#note that a matching picture should have a coefficient of 1, non-matching pictures have really small coeffs
+def compare_image_QR(targetPictureMatrix, allImageMatrix): 
+    q, r = np.linalg.qr(allImageMatrix, mode='reduced');
+    resultant = np.dot(np.transpose(q), targetPictureMatrix)
+    coefs = np.linalg.solve(r, resultant)
+    return coefs
