@@ -21,3 +21,5 @@ This code runs on python 2.7 and requires the libraries numpy and opencv2
 * ```display_image(image)``` prints image to the screen until a key is pressed.
 * ```create_image(rows=0,columns=0)``` uses the default computer camera to take a picture using the spacebar. Image is then formatted and output as a flat vector.
 * ```normalize_image(image)``` returns an image that is normalize with respect to the interval [0,255]. This is used to display the eigenfaces and the reprojected images.
+* ```save_projection(name, x, filename)``` saves a projection and a correspond name to a given filename. Additional saved projections must be of the same length. Specified filename must be of the .npz format.
+* ```load_projection(name, filename)``` load the first projection correspond to a given name from projection a give projection file. The file must be of the .npz format. Return ```None``` if projection doesn't exist. 
