@@ -30,6 +30,45 @@ def save_image(filename, image):
     image_path = path + filename
     cv2.imwrite(image_path, image)
 
+# saves a given projection paired with a name
+# saving additional projections must have the same dimensions
+# given filename must be npz format
+def save_projection(name, x, filename):
+    projections = path + filename
+    if not os.path.exists(projections):
+        np.savez(, names=[name], projections=[x])
+        print "created new projection file\n"
+    else:
+        data = np.load(projections)
+        if data is None:
+            np.savez(projections, names=[name], projections=[x])
+            return 
+
+        name_data = data['names']
+        proj_data = data['projections']
+        data.close() 
+
+        name_data = np.vstack((name_data, name))
+        proj_data = np.vstack((proj_data, x))
+        np.savez(projections, names=name_data, projections=proj_data)
+        
+# returns the first instance of name in the projection file
+# filename must include filetype
+def load_projection(name, filename):    
+    projections = path + filename
+    if not os.path.exists(projections):
+        return None
+    data = np.load(projections)
+    names = data['names']
+    count = 0
+    for key in names:
+        if name == key[0]:
+            projection = data['projections'][count]
+            data.close()
+            return np.array(projection, ndmin=2).T
+    data.close()
+    return None
+
 # turns on webcam and displays the feed to the user, when ready the user presses
 # the space bar to take a picture which is then displayed to the user and after a
 # keypress is formatted and turn into a flat vector.
