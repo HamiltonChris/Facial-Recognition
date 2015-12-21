@@ -20,8 +20,8 @@ def unflatten_image(vector, rows, columns):
     return image
 
 # displays input file image
-def display_image(image):
-    cv2.imshow('image',image)
+def display_image(image, name='image'):
+    cv2.imshow(name,image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -36,7 +36,7 @@ def save_image(filename, image):
 def save_projection(name, x, filename):
     projections = path + filename
     if not os.path.exists(projections):
-        np.savez(, names=[name], projections=[x])
+        np.savez(projections, names=[name], projections=[x])
         print "created new projection file\n"
     else:
         data = np.load(projections)
@@ -107,9 +107,7 @@ def create_image(rows=0,columns=0,scaling=0):
     camera.release()
     cv2.destroyAllWindows()
     image = format_image(image, scaling * rows, scaling * columns)
-    print image.shape
     image = scale_image(image, rows, columns)
-    print image.shape
     display_image(image)
     return flatten_image(image) 
 
