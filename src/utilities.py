@@ -20,8 +20,8 @@ def unflatten_image(vector, rows, columns):
     return image
 
 # displays input file image
-def display_image(image):
-    cv2.imshow('image',image)
+def display_image(image, name='image'):
+    cv2.imshow(name,image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -36,8 +36,8 @@ def save_image(filename, image):
 def save_projection(name, x, filename):
     projections = path + filename
     if not os.path.exists(projections):
-        np.savez(, names=[name], projections=[x])
-        print "created new projection file\n"
+        np.savez(projections, names=[name], projections=[x])
+        print "created new projection file"
     else:
         data = np.load(projections)
         if data is None:
@@ -47,9 +47,9 @@ def save_projection(name, x, filename):
         name_data = data['names']
         proj_data = data['projections']
         data.close() 
-
+        print x.shape, proj_data.shape
         name_data = np.vstack((name_data, name))
-        proj_data = np.vstack((proj_data, x))
+        proj_data = np.vstack((proj_data, [x]))
         np.savez(projections, names=name_data, projections=proj_data)
         
 # returns the first instance of name in the projection file
@@ -68,6 +68,18 @@ def load_projection(name, filename):
             return np.array(projection, ndmin=2).T
     data.close()
     return None
+
+def load_projections(filename): 
+    projections = path + filename
+    if not os.path.exists(projections):
+        return None, None
+    data = np.load(projections)
+    names = data['names']
+    projections = data['projections']
+    data.close()
+
+    return names, projections
+    
 
 # turns on webcam and displays the feed to the user, when ready the user presses
 # the space bar to take a picture which is then displayed to the user and after a
@@ -107,9 +119,7 @@ def create_image(rows=0,columns=0,scaling=0):
     camera.release()
     cv2.destroyAllWindows()
     image = format_image(image, scaling * rows, scaling * columns)
-    print image.shape
     image = scale_image(image, rows, columns)
-    print image.shape
     display_image(image)
     return flatten_image(image) 
 
